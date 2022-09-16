@@ -2,6 +2,9 @@ name: automatically-check-broken-links
 
 on:
   push
+  #schedule:
+    # * is a special character in YAML so you have to quote this string
+    #- cron:  '0 8 * * 4'
 permissions:
   contents: read
   issues: write 
@@ -11,8 +14,8 @@ jobs:
     steps:
     - name: Checkout mater 
       uses: actions/checkout@master
-      with:
-        submodules: recursive
+      #with:
+       # submodules: recursive
     - name: Run link check
       uses: gaurav-nelson/github-action-markdown-link-check@v1
       id: last_status
