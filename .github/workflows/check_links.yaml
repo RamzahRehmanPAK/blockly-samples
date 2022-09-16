@@ -14,15 +14,14 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - uses: gaurav-nelson/github-action-markdown-link-check@v1
-      id: last_status
+    id: last_status
       # with:
       #   use-quiet-mode: 'no'
       #   use-verbose-mode: 'yes'
       #   check-modified-files-only: 'yes'
 
   create-issue:
-    #&& steps.last_status.outputs.last_status == 'failure'
-    if: ${{ always() }}
+    if: ${{ failure() && steps.last_status.conclusion == 'failure' }}
     needs: markdown-link-check
     runs-on: ubuntu-latest
     steps:
