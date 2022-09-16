@@ -21,10 +21,12 @@ jobs:
       #   check-modified-files-only: 'yes'
 
   create-issue:
+    if: ${{ always() && steps.last_status.outputs.last_status == 'failure'  }}
+    needs: markdown-link-check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: JasonEtco/create-an-issue@v2
-        if: ${{ success() && steps.last_status.outputs.last_status == 'failure' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v2
+    - uses: JasonEtco/create-an-issue@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
