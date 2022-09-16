@@ -21,7 +21,8 @@ jobs:
       #   check-modified-files-only: 'yes'
 
   create-issue:
-    if: ${{ always() && steps.last_status.outputs.last_status == 'failure'  }}
+    #&& steps.last_status.outputs.last_status == 'failure'
+    if: ${{ always() }}
     needs: markdown-link-check
     runs-on: ubuntu-latest
     steps:
