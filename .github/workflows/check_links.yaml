@@ -15,18 +15,23 @@ jobs:
     - uses: actions/checkout@master
     - uses: gaurav-nelson/github-action-markdown-link-check@v1
       id: last_status
+    - name: create-issue
+      if: ${{ failure() && steps.last_status.conclusion == 'failure' }}
+      uses: JasonEtco/create-an-issue@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # with:
       #   use-quiet-mode: 'no'
       #   use-verbose-mode: 'yes'
       #   check-modified-files-only: 'yes'
 
-  create-issue:
-    if: ${{ failure() && steps.last_status.conclusion == 'failure' }}
-    needs: markdown-link-check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: JasonEtco/create-an-issue@v2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # create-issue:
+  #   if: ${{ failure() && steps.last_status.conclusion == 'failure' }}
+  #   needs: markdown-link-check
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - uses: JasonEtco/create-an-issue@v2
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
  
