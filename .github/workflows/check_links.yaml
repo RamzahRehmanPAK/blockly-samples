@@ -1,0 +1,36 @@
+name: automatically-check-broken-links
+
+on:
+  push
+permissions:
+  contents: read
+  issues: write 
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout mater 
+      uses: actions/checkout@master
+      with:
+        submodules: recursive
+    - name: Run link check
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      id: last_status
+      with:
+        use-quiet-mode: 'no'
+        use-verbose-mode: 'yes'
+        check-modified-files-only: 'yes'
+      
+
+  create-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mater again
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Create issue
+        uses: JasonEtco/create-an-issue@v2
+        if: ${{ success() && steps.last_status.outputs.last_status == 'failure' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
